@@ -1,11 +1,11 @@
 const path = require('path')
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './test/test.js',
     mode: "production",
     output: {
-        path: path.join(__dirname, 'public'),
-        filename: 'index.js'
+        path: path.join(__dirname, 'test'),
+        filename: 'build.js'
     },
     module: {
         rules: [
@@ -19,9 +19,8 @@ module.exports = {
     },
     devServer: {
         static: {
-            directory: path.join(__dirname, "public"),
+            directory: path.join(__dirname, "test"),
         },
-        port: 3000,
-        open: true
+        port: 3000
     },
 }

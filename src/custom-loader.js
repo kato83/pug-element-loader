@@ -17,41 +17,57 @@ module.exports = function (source) {
         .split(',')
         .map(key => key.trim());
 
-    // @todo don't use eval
+    const build = (parent, a) => {
+        let s = "((parent) => {";
+        s += `let e;`;
+        a.forEach(current => {
+            // HTML Node
+            if (current.type === "Tag") {
+                s += `e = document.createElement("${current.name}");`
+                s += `parent.appendChild(e);`;
+                // think about use pug-attrs
+                s += current.attrs
+                    .map(attr => `e.setAttribute('${attr.name}', ${attr.val});`)
+                    .join('');
+            }
+            // Text Node
+            else if (current.type === "Text") {
+                s += `e = document.createTextNode(${JSON.stringify(current.val)});`;
+                s += `parent.appendChild(e);`;
+            }
+            // Slot Node
+            else if (current.type === "MixinBlock") {
+                s += `e = document.createElement("slot");`
+                s += `parent.appendChild(e);`;
+            }
+            // HTML Comment Node
+            else if (current.type === "Comment") {
+                s += `e = document.createComment(${JSON.stringify(current.val)});`;
+                s += `parent.appendChild(e);`;
+            }
+            if (current.block && current.block.nodes && current.block.nodes.length) {
+                s += build('e', current.block.nodes);
+            }
+        })
+        s += `})(${parent});`;
+        return s;
+    };
+
+    console.log(JSON.stringify(ast.block.nodes, null, ' '));
+
+    let innerNodeBuildScript = build('shadowRoot', ast.block.nodes);
+    console.log(innerNodeBuildScript);
+
     const js = `class ${toPascalCase(ast.name)} extends HTMLElement{
     constructor() {
         super();
         const shadowRoot = this.attachShadow({ mode: 'open' });
         ${args.map(key =>
-        `this.${key} = this.getAttribute('${key}')`)
-        .join(';\n') + ';'}
+        `const ${key} = this.getAttribute('${key}');
+        this.${key} = ${key};`)
+        .join('\n')}
 
-        const build = (pointer, ast) => ast.reduce((acc, current, _index) => {
-            const tagOrText = (() => {
-                if (current.type === "Tag") {
-                    const tag = document.createElement(current.name);
-                    current.attrs.forEach(({name, val}) => {
-                        tag.setAttribute(name, eval(val));
-                    });
-                    return tag;
-                } else if (current.type === "MixinBlock") {
-                    return document.createElement("slot");
-                } else if (current.type === "Code") {
-                    return null;
-                } else {
-                    return document.createTextNode(current.val);
-                }
-            })();
-            if(tagOrText){
-                pointer.appendChild(tagOrText);
-            }
-            if (current && current.block && current.block.nodes) {
-                return build(tagOrText, current.block.nodes);
-            }
-            return tagOrText;
-        }, pointer)
-
-        const result = build(shadowRoot, ${JSON.stringify(ast.block.nodes)});
+        ${innerNodeBuildScript}
     }
     ${args.map(key =>
         `${key};`)
