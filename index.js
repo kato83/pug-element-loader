@@ -52,7 +52,28 @@ module.exports = function (source) {
             s += `parent.appendChild(e);`;
             // think about use pug-attrs
             s += a.attrs
-                .map(attr => `e.setAttribute('${attr.name}', ${attr.val});`)
+                .map(attr => {
+                    if (attr.name === 'class') {
+                        return `const classItem = ${attr.val};
+                        if (Array.isArray(classItem)) {
+                          e.classList.add(...classItem);
+                        } else {
+                          e.classList.add(classItem);                          
+                        }`
+                    }
+                    if (attr.name === 'style') {
+                        return `const styles = ${attr.val};
+                          if (typeof styles === 'string') {
+                            e.setAttribute('${attr.name}', ${attr.val});
+                          } else {
+                            Object.keys(styles)
+                            .forEach(key => {
+                              e.style[key] = styles[key];
+                            });
+                          }`
+                    }
+                    return `e.setAttribute('${attr.name}', ${attr.val});`
+                })
                 .join('');
         } else if (a.type === "Text") {
             s += `t = document.createElement('template');`;
