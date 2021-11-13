@@ -18,9 +18,7 @@ module.exports = function (source) {
         .map(key => key.trim())
         .map(key => {
             const list = key.split("=");
-            return ({
-                name: list[0], defaultValue: (list[1] || null)
-            })
+            return ({name: list[0], defaultValue: (list[1] || null)});
         });
 
     if (args.find(key => key.name.startsWith('...'))) {
@@ -29,49 +27,52 @@ module.exports = function (source) {
 
     const build = (parent, a) => {
         let s = "((parent) => {";
-        s += `let e, t;`;
-        a.forEach(current => {
-            // HTML Node
-            if (current.type === "Tag") {
-                s += `e = document.createElement("${current.name}");`
-                s += `parent.appendChild(e);`;
-                // think about use pug-attrs
-                s += current.attrs
-                    .map(attr => `e.setAttribute('${attr.name}', ${attr.val});`)
-                    .join('');
-            }
-            // Text Node
-            else if (current.type === "Text") {
-                s += `t = document.createElement('template');`;
-                s += `t.innerHTML = ${JSON.stringify(current.val)};`;
-                s += `e = document.createTextNode(${JSON.stringify(current.val)});`;
-                s += `parent.appendChild(t.content);`;
-            }
-            // Slot Node
-            else if (current.type === "MixinBlock") {
-                s += `e = document.createElement("slot");`
-                s += `parent.appendChild(e);`;
-            }
-            // Text Variable Code
-            else if (current.type === "Code" && current.buffer) {
-                s += `const tmp = ${current.val};`;
-                s += `e = document.createTextNode(tmp);`;
-                s += `parent.appendChild(e);`;
-            }
-            // HTML Comment Node
-            else if (current.type === "Comment") {
-                s += `e = document.createComment(${JSON.stringify(current.val)});`;
-                s += `parent.appendChild(e);`;
-            }
-            if (current.block && current.block.nodes && current.block.nodes.length) {
-                s += build('e', current.block.nodes);
-            }
-        })
+        s += `let e = parent;`;
+        s += `let t;`;
+
+        if (a.type === "Code" && a.buffer) {
+            s += `const tmp = ${a.val};`;
+            s += `e = document.createTextNode(tmp);`;
+            s += `parent.appendChild(e);`;
+        } else if (a.type === "Comment") {
+            s += `e = document.createComment(${JSON.stringify(a.val)});`;
+            s += `parent.appendChild(e);`;
+        }
+        if (a.type === "Conditional") {
+            s += `if(${a.test}) {`
+            s += build('parent', a.consequent);
+            s += `} else {`
+            s += build('parent', a.alternate);
+            s += `}`;
+        } else if (a.type === "MixinBlock") {
+            s += `e = document.createElement("slot");`;
+            s += `parent.appendChild(e);`;
+        } else if (a.type === "Tag") {
+            s += `e = document.createElement("${a.name}");`;
+            s += `parent.appendChild(e);`;
+            // think about use pug-attrs
+            s += a.attrs
+                .map(attr => `e.setAttribute('${attr.name}', ${attr.val});`)
+                .join('');
+        } else if (a.type === "Text") {
+            s += `t = document.createElement('template');`;
+            s += `t.innerHTML = ${JSON.stringify(a.val)};`;
+            s += `e = document.createTextNode(${JSON.stringify(a.val)});`;
+            s += `parent.appendChild(t.content);`;
+        }
+
+        if ((a.block && a.block.nodes) || a.nodes) {
+            (a.nodes || a.block.nodes || []).forEach(current => {
+                s += build('e', current);
+            });
+        }
+
         s += `})(${parent});`;
+
         return s;
     };
 
-    let innerNodeBuildScript = build('shadowRoot', ast.block.nodes);
+    let innerNodeBuildScript = build('shadowRoot', ast.block);
 
     const js = `class ${toPascalCase(ast.name)} extends HTMLElement{
     constructor() {
