@@ -10,3 +10,15 @@ mixin heading-lv2(align='Default value', pattern, dataSample)
             span.hoghe
                 block
         p Aline <em>is</em> #{align}'"sample.'"
+mixin heading-lv3(align='Default value', pattern, dataSample)
+    #heading-lv2(style = `text-align: ${align}`, data-hoge='a><br/>a"\'aa')
+        // hogehoge
+        h3(
+            class=['foo', 'bar', 'hoge']
+            style={fontSize: '1rem', color: 'red'}
+            checked=false
+            hidden=false
+        )
+            span.hoghe
+                block
+        p Aline <em>is</em> #{align}'"sample.'"

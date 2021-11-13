@@ -10,7 +10,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.ce.pug$/,
+                test: /\.ce\.pug$/,
                 use: [
                     path.resolve(__dirname, "index.js"),
                 ],
