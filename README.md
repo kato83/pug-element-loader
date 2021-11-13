@@ -25,9 +25,7 @@ module.exports = {
             // ...
             {
                 test: /\.ce.pug$/,
-                use: [
-                    path.resolve(__dirname, "src/custom-loader.js"),
-                ],
+                use: ["pug-element-loader"],
             },
             // ...
         ]
