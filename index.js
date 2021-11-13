@@ -73,7 +73,11 @@ module.exports = function (source) {
                             });
                           }`
                     }
-                    return `e.setAttribute('${attr.name}', ${attr.val});`
+                    return `if (typeof ${attr.val} === 'boolean' && ${attr.val}) {
+                        e.setAttribute('${attr.name}', '${attr.name}');
+                      } else if (typeof ${attr.val} !== 'boolean') {
+                        e.setAttribute('${attr.name}', ${attr.val});
+                      }`;
                 })
                 .join('');
         } else if (a.type === "Text") {
