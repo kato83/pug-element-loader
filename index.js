@@ -13,8 +13,9 @@ module.exports = function (source) {
     const tokens = lex(source, {filename});
     const ast = parse(stripComments(tokens, {filename}), {filename}).nodes[0];
 
-    const args = ast.args
+    const args = (ast.args || '')
         .split(',')
+        .filter(Boolean)
         .map(key => key.trim())
         .map(key => {
             const list = key.split("=");
