@@ -2,7 +2,7 @@
   "name": "pug-element-loader",
   "version": "0.0.1",
   "description": "",
-  "main": "src/custom-loader.js",
+  "main": "index.js",
   "scripts": {
     "webpack": "webpack",
     "serve": "webpack serve"
