@@ -12,7 +12,7 @@ module.exports = {
             {
                 test: /\.ce.pug$/,
                 use: [
-                    path.resolve(__dirname, "src/custom-loader.js"),
+                    path.resolve(__dirname, "index.js"),
                 ],
             },
         ]
