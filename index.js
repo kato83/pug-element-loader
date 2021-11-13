@@ -12,16 +12,11 @@ module.exports = function (source) {
     const filename = path.basename(this.resourcePath);
     const tokens = lex(source, {filename});
     let origin = parse(stripComments(tokens, {filename}), {filename});
-    const ast = origin.nodes[0];
 
-    const result = origin.nodes.reduce((acc, current) => {
+    return origin.nodes.reduce((acc, current) => {
         const {name, source} = createClass(current);
         return acc + `${name}: ${source},`;
     }, "module.exports = {") + "}";
-
-    console.log(result);
-    console.log(JSON.stringify({HeadingLv2: result}));
-    return result;
 };
 
 const createClass = (ast) => {
@@ -43,15 +38,16 @@ const createClass = (ast) => {
         s += `let e = parent;`;
         s += `let t;`;
 
-        if (a.type === "Code" && a.buffer) {
+        if (a.type === "Code" && !a.buffer) {
+            s += `${a.val};`;
+        } else if (a.type === "Code" && a.buffer) {
             s += `const tmp = ${a.val};`;
             s += `e = document.createTextNode(tmp);`;
             s += `parent.appendChild(e);`;
         } else if (a.type === "Comment") {
             s += `e = document.createComment(${JSON.stringify(a.val)});`;
             s += `parent.appendChild(e);`;
-        }
-        if (a.type === "Conditional") {
+        } else if (a.type === "Conditional") {
             s += `if(${a.test}) {`
             s += build('parent', a.consequent);
             s += `} else {`
