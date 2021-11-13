@@ -1,7 +1,7 @@
 mixin heading-lv2(align='Default value', pattern, dataSample)
-    div.heading-lv2(style = `text-align: ${align}`, data-hoge='a><br/>a"\'aa')
+    #heading-lv2(style = `text-align: ${align}`, data-hoge='a><br/>a"\'aa')
         // hogehoge
-        h2
-            span
+        h2(class=['foo', 'bar', 'hoge'], style={fontSize: '1rem', color: 'red'})
+            span.hoghe
                 block
         p Aline <em>is</em> #{align}'"sample.'"
