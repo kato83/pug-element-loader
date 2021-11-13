@@ -15,11 +15,21 @@ module.exports = function (source) {
 
     const args = ast.args
         .split(',')
-        .map(key => key.trim());
+        .map(key => key.trim())
+        .map(key => {
+            const list = key.split("=");
+            return ({
+                name: list[0], defaultValue: (list[1] || null)
+            })
+        });
+
+    if (args.find(key => key.name.startsWith('...'))) {
+        throw new Error('Rest Arguments is Not Support');
+    }
 
     const build = (parent, a) => {
         let s = "((parent) => {";
-        s += `let e;`;
+        s += `let e, t;`;
         a.forEach(current => {
             // HTML Node
             if (current.type === "Tag") {
@@ -32,12 +42,20 @@ module.exports = function (source) {
             }
             // Text Node
             else if (current.type === "Text") {
+                s += `t = document.createElement('template');`;
+                s += `t.innerHTML = ${JSON.stringify(current.val)};`;
                 s += `e = document.createTextNode(${JSON.stringify(current.val)});`;
-                s += `parent.appendChild(e);`;
+                s += `parent.appendChild(t.content);`;
             }
             // Slot Node
             else if (current.type === "MixinBlock") {
                 s += `e = document.createElement("slot");`
+                s += `parent.appendChild(e);`;
+            }
+            // Text Variable Code
+            else if (current.type === "Code" && current.buffer) {
+                s += `const tmp = ${current.val};`;
+                s += `e = document.createTextNode(tmp);`;
                 s += `parent.appendChild(e);`;
             }
             // HTML Comment Node
@@ -53,28 +71,25 @@ module.exports = function (source) {
         return s;
     };
 
-    console.log(JSON.stringify(ast.block.nodes, null, ' '));
-
     let innerNodeBuildScript = build('shadowRoot', ast.block.nodes);
-    console.log(innerNodeBuildScript);
 
     const js = `class ${toPascalCase(ast.name)} extends HTMLElement{
     constructor() {
         super();
         const shadowRoot = this.attachShadow({ mode: 'open' });
         ${args.map(key =>
-        `const ${key} = this.getAttribute('${key}');
-        this.${key} = ${key};`)
+        `const ${key.name} = this.getAttribute('${key.name}') || ${key.defaultValue};
+        this.${key.name} = ${key.name};`)
         .join('\n')}
 
         ${innerNodeBuildScript}
     }
     ${args.map(key =>
-        `${key};`)
+        `${key.name};`)
         .join('\n')}
     ${args.map(key =>
         // getter    
-        `get ${key}() { return this.${key}; }`)
+        `get ${key.name}() { return this.${key.name}; }`)
         .join('\n')}
 }`;
 

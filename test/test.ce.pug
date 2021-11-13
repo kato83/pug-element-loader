@@ -1,7 +1,7 @@
-mixin heading-lv2(align, pattern, dataSample)
+mixin heading-lv2(align='Default value', pattern, dataSample)
     div.heading-lv2(style = `text-align: ${align}`, data-hoge='a><br/>a"\'aa')
         // hogehoge
         h2
             span
                 block
-        p This is Sampb'"le.'"
+        p Aline <em>is</em> #{align}'"sample.'"
