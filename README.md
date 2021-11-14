@@ -39,10 +39,10 @@ as a custom element.
 
 ```pug
 mixin sample-element(align, pattern, dataSample)
-    //- It won't work without "this".
     div.el-heading-lv2(style = `text-align: ${this.align};`)
         h2
             span
+                // slot element
                 block
         p This is Sample.
 ```

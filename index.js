@@ -22,8 +22,8 @@ module.exports = function (source) {
 const createClass = (ast) => {
     const args = (ast.args || '')
         .split(',')
-        .filter(Boolean)
         .map(key => key.trim())
+        .filter(Boolean)
         .map(key => {
             const list = key.split("=");
             return ({name: list[0], defaultValue: (list[1] || null)});
@@ -39,7 +39,9 @@ const createClass = (ast) => {
         s += `let t;`;
 
         if (a.type === "Code" && !a.buffer) {
-            s += `${a.val};`;
+            s += `e = document.createElement('script');`;
+            s += `e.textContent = "${a.val}";`;
+            s += `parent.appendChild(e);`;
         } else if (a.type === "Code" && a.buffer) {
             s += `const tmp = ${a.val};`;
             s += `e = document.createTextNode(tmp);`;
@@ -91,7 +93,6 @@ const createClass = (ast) => {
         } else if (a.type === "Text") {
             s += `t = document.createElement('template');`;
             s += `t.innerHTML = ${JSON.stringify(a.val)};`;
-            s += `e = document.createTextNode(${JSON.stringify(a.val)});`;
             s += `parent.appendChild(t.content);`;
         }
 

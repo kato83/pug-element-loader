@@ -1,0 +1,10 @@
+mixin first-view-source
+    a(href='//google.com') Google
+    |
+    |
+    a(class='button' href='//google.com') Google
+    |
+    |
+    a(class='button', href='//google.com') Google
+    - const authenticated = true
+    p(class=authenticated ? 'authed' : 'anon')
