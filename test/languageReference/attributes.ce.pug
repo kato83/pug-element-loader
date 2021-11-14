@@ -6,5 +6,75 @@ mixin first-view-source
     |
     |
     a(class='button', href='//google.com') Google
-    - const authenticated = true
-    p(class=authenticated ? 'authed' : 'anon')
+    - var authenticated = true
+    body(class=authenticated ? 'authed' : 'anon')
+
+mixin multiline-attributes
+    input(
+        type='checkbox'
+        name='agreement'
+        checked
+    )
+    input(data-json=`
+      {
+        "very-long": "piece of ",
+        "data": true
+      }
+    `)
+
+mixin quoted-attributes
+    p * An DOMException occurs and it is impossible to deal with.
+    div(class='div-class' '(click)'='play()')
+
+mixin attribute-interpolation
+    - var url = 'pug-test.html';
+    a(href='/' + url) Link
+    |
+    |
+    - url = 'https://example.com/'
+    a(href=url) Another link
+
+    - var btnType = 'info'
+    - var btnSize = 'lg'
+    button(type='button' class='btn btn-' + btnType + ' btn-' + btnSize)
+    |
+    |
+    button(type='button' class=`btn btn-${btnType} btn-${btnSize}`)
+
+mixin boolean-attributes
+    input(type='checkbox' checked)
+    |
+    |
+    input(type='checkbox' checked=true)
+    |
+    |
+    input(type='checkbox' checked=false)
+    |
+    |
+    input(type='checkbox' checked=true.toString())
+
+    //-
+        doctype html
+        |
+        |
+        input(type='checkbox' checked)
+        |
+        |
+        input(type='checkbox' checked=true)
+        |
+        |
+        input(type='checkbox' checked=false)
+        |
+        |
+        input(type='checkbox' checked=true && 'checked')
+
+mixin style-attributes
+    a(style={color: 'red', background: 'green'})
+
+mixin class-attributes
+    - var classes = ['foo', 'bar', 'baz']
+    a(class=classes)
+    |
+    |
+    //- the class attribute may also be repeated to merge arrays
+    a.bang(class=classes class=['bing'])

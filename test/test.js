@@ -1,6 +1,17 @@
-import {HeadingLv2, HeadingLv3} from './test.ce.pug';
-import {FirstViewSource} from './languageReference/attributes.ce.pug';
+import {
+    FirstViewSource,
+    MultilineAttributes,
+    QuotedAttributes,
+    AttributeInterpolation,
+    BooleanAttributes,
+    StyleAttributes,
+    ClassAttributes
+} from './languageReference/attributes.ce.pug';
 
-customElements.define('heading-lv2', HeadingLv2);
-customElements.define('heading-lv3', HeadingLv3);
 customElements.define('first-view-source', FirstViewSource);
+customElements.define('multiline-attributes', MultilineAttributes);
+customElements.define('quoted-attributes', QuotedAttributes);
+customElements.define('attribute-interpolation', AttributeInterpolation);
+customElements.define('boolean-attributes', BooleanAttributes);
+customElements.define('style-attributes', StyleAttributes);
+customElements.define('class-attributes', ClassAttributes);
