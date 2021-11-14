@@ -16,40 +16,33 @@ For use with webpack.
 The following is an example of `webpack.config.js`.
 
 ```javascript
-const path = require('path');
-
-module.exports = {
-    // ...
-    module: {
-        rules: [
-            // ...
-            {
-                test: /\.ce.pug$/,
-                use: ["pug-element-loader"],
-            },
-            // ...
-        ]
-    }
-    // ...
+module: {
+    rules: [
+        {
+            test: /\.ce.pug$/,
+            use: ["pug-element-loader"],
+        },
+    ]
 }
 ```
 
-The `***.ce.pug` file will then export a class object that inherits from HTMLElement, so all you have to do is define it
-as a custom element.
+The `***.ce.pug` file will then export a class object that inherits from HTMLElement, so all you have to do is define it as a custom element.
 
 ```pug
-mixin sample-element(align, pattern, dataSample)
-    div.el-heading-lv2(style = `text-align: ${this.align};`)
+mixin sample-element(align)
+    div.el-heading-lv2(style = `text-align: ${align};`)
         h2
-            span
-                // slot element
-                block
+            // block is the slot element.
+            block
         p This is Sample.
 ```
+
+All you have to do is register it as a custom element and write it in your HTML.
 
 ```javascript
 import SampleElement from './sample-element.ce.pug';
 
+// ex. <sample-element align="center">Sample Text</sample-element>
 customElements.define('sample-element', SampleElement);
 ```
 
