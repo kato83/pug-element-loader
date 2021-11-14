@@ -65,12 +65,16 @@ const createClass = (ast) => {
             s += a.attrs
                 .map(attr => {
                     if (attr.name === 'class') {
-                        return `const classItem = ${attr.val};
-                        if (Array.isArray(classItem)) {
-                          e.classList.add(...classItem);
-                        } else {
-                          e.classList.add(classItem);                          
-                        }`
+                        return `const classItem = ((items) => {
+                            if (Array.isArray(items)) {
+                              return items.map(item => item.trim())
+                                .filter(Boolean);
+                            }
+                            return items.split(' ')
+                              .map(item => item.trim())
+                              .filter(Boolean);
+                        })(${attr.val});
+                          e.classList.add(...classItem);`
                     }
                     if (attr.name === 'style') {
                         return `const styles = ${attr.val};
