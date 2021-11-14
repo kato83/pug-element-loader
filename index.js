@@ -1,7 +1,9 @@
+const path = require('path');
 const lex = require('pug-lexer');
 const stripComments = require('pug-strip-comments');
 const parse = require('pug-parser');
-const path = require('path');
+const load = require('pug-load');
+const link = require('pug-linker');
 
 const toCamelCase = (text) => text.replace(/-\w/g, clearAndUpper);
 const toPascalCase = (text) => text.replace(/(^\w|-\w)/g, clearAndUpper);
@@ -9,11 +11,22 @@ const clearAndUpper = (text) => text.replace(/-/, "").toUpperCase();
 
 module.exports = function (source) {
 
+    // source to ast
     const filename = path.basename(this.resourcePath);
     const tokens = lex(source, {filename});
-    let origin = parse(stripComments(tokens, {filename}), {filename});
+    const ast = (() => {
+        const stripCommentTokens = stripComments(tokens, {filename});
+        const ast = parse(stripCommentTokens, {filename});
+        const includeExternalFile = load(ast, {
+            lex,
+            parse,
+            resolve: (filename, _source, _options) =>
+                path.join(path.dirname(this.resourcePath), filename)
+        });
+        return link(includeExternalFile);
+    })();
 
-    return origin.nodes.reduce((acc, current) => {
+    return ast.nodes.reduce((acc, current) => {
         const {name, source} = createClass(current);
         return acc + `${name}: ${source},`;
     }, "module.exports = {") + "}";
