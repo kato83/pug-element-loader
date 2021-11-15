@@ -24,7 +24,7 @@ mixin multiline-attributes
 
 mixin quoted-attributes
     p * An DOMException occurs and it is impossible to deal with.
-    div(class='div-class' '(click)'='play()')
+    //- div(class='div-class' '(click)'='play()')
 
 mixin attribute-interpolation
     - var url = 'pug-test.html';
@@ -78,3 +78,12 @@ mixin class-attributes
     |
     //- the class attribute may also be repeated to merge arrays
     a.bang(class=classes class=['bing'])
+
+mixin class-literal
+    a.button button
+
+mixin id-literal
+    a#main-link button
+
+mixin and-attributes
+    div#foo(data-bar="foo")&attributes({'data-foo': 'bar'})

@@ -109,6 +109,12 @@ const createClass = (ast) => {
                       }`;
                 })
                 .join('');
+            a.attributeBlocks.map(attr => {
+                s += `const attrs = ${attr.val};
+                Object.keys(attrs).forEach(key => {
+                  e.setAttribute(key, attrs[key]);
+                });`;
+            })
         } else if (a.type === "Text") {
             s += `t = document.createElement('template');`;
             s += `t.innerHTML = ${JSON.stringify(a.val)};`;
