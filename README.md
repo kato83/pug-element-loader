@@ -4,15 +4,6 @@
 
 A loader that converts pug mixin blocks into custom elements for web components.
 
-### About
-
-It provides the following conversion processes.
-
-```
-mixin sample-element(data-foo='default-value')
-    h1(data-foo=)
-```
-
 ### ⚠ Caution ⚠
 
 This is an experimental implementation and should not be used in a production environment.  
