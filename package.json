@@ -1,7 +1,7 @@
 {
   "name": "pug-element-loader",
-  "version": "0.0.2",
-  "description": "",
+  "version": "0.0.3",
+  "description": "A loader that converts pug mixin blocks into custom elements for web components.",
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",
