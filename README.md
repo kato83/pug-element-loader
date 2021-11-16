@@ -25,7 +25,7 @@ The following is an example of `webpack.config.js`.
 module: {
     rules: [
         {
-            test: /\.ce.pug$/,
+            test: /\.ce\.pug$/,
             use: ["pug-element-loader"],
         },
     ]
