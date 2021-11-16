@@ -51,7 +51,14 @@ const createClass = (ast) => {
         s += `let e = parent;`;
         s += `let t;`;
 
-        if (a.type === "Code" && !a.buffer) {
+
+        if (a.type === "BlockComment") {
+            s += `const text = ${JSON.stringify(a.block.nodes)}
+              .map(t => t.val)
+              .join('');`;
+            s += `e = document.createComment(text);`;
+            s += `parent.appendChild(e);`;
+        } else if (a.type === "Code" && !a.buffer) {
             s += `e = document.createElement('script');`;
             s += `e.textContent = "${a.val}";`;
             s += `parent.appendChild(e);`;

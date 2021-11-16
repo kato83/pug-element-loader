@@ -57,28 +57,27 @@ I lack verification on everything, so if you find a bug, please report it to me 
 
 |Pug Docks|Support|
 |---|---|
-|[Comments](https://pugjs.org/language/comments.html)|Support *1|
+|[Attributes](https://pugjs.org/language/attributes.html)|Support *1|
 |[Case](https://pugjs.org/language/case.html)|To be supported|
 |[Code](https://pugjs.org/language/code.html)|To be supported|
-|[Comments](https://pugjs.org/language/comments.html)|Support *2|
+|[Comments](https://pugjs.org/language/comments.html)|Support|
 |[Conditionals](https://pugjs.org/language/conditionals.html)|Support|
 |[Doctype](https://pugjs.org/language/doctype.html)|Not Support|
 |[Filters](https://pugjs.org/language/filters.html)|Plans for support|
-|[Includes](https://pugjs.org/language/includes.html)|Pre Support *3|
+|[Includes](https://pugjs.org/language/includes.html)|Pre Support *2|
 |[Template Inheritance](https://pugjs.org/language/inheritance.html)|Plans for support|
-|[Interpolation](https://pugjs.org/language/interpolation.html)|Pre Support *4|
+|[Interpolation](https://pugjs.org/language/interpolation.html)|Pre Support *3|
 |[Iteration](https://pugjs.org/language/iteration.html)|To be supported|
-|[Mixins](https://pugjs.org/language/mixins.html)|Plans for support *5|
-|[Plain Text](https://pugjs.org/language/plain-text.html)|Pre Support *6|
-|[Tags](https://pugjs.org/language/tags.html)|Support *7|
+|[Mixins](https://pugjs.org/language/mixins.html)|Plans for support *4|
+|[Plain Text](https://pugjs.org/language/plain-text.html)|Pre Support *5|
+|[Tags](https://pugjs.org/language/tags.html)|Support *6|
 
 *1. Support for "Unescaped Attributes" and "Quoted Attributes" excluded.  
-*2 "Block Comments" and "Conditional Comments" are excluded from support, but will be supported.  
-*3 A simple pug file can probably be read, but is not fully validated.  
-*4 Only "String Interpolation, Escaped" is supported, but other features will be supported.  
-*5 Support will be promoted for use as multiple blocks, i.e. named slot elements.  
-*6 "Inline in a Tag" and "Piped Text" are supported.  
-*7 "Self-Closing Tags", i.e. void elements, cannot be controlled by JavaScript, so it seems impossible to implement.
+*2 A simple pug file can probably be read, but is not fully validated.  
+*3 Only "String Interpolation, Escaped" is supported, but other features will be supported.  
+*4 Support will be promoted for use as multiple blocks, i.e. named slot elements.  
+*5 "Inline in a Tag" and "Piped Text" are supported.  
+*6 "Self-Closing Tags", i.e. void elements, cannot be controlled by JavaScript, so it seems impossible to implement.
 
 ### To do
 
