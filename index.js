@@ -78,6 +78,12 @@ const createClass = (ast) => {
         } else if (a.type === "MixinBlock") {
             s += `e = document.createElement("slot");`;
             s += `parent.appendChild(e);`;
+        } else if (a.type === "Tag" && a.textOnly) {
+            s += `e = document.createElement("${a.name}");`;
+            s += `e.textContent = \`${a.block.nodes.map(node => node.val).join('')}\`;`;
+            s += `parent.appendChild(e);`;
+            // All the Block Text underneath will be processed here, so it will be set to null.
+            a.block = null;
         } else if (a.type === "Tag") {
             s += `e = document.createElement("${a.name}");`;
             s += `parent.appendChild(e);`;
