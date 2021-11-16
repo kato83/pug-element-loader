@@ -58,6 +58,8 @@ const createClass = (ast) => {
               .join('');`;
             s += `e = document.createComment(text);`;
             s += `parent.appendChild(e);`;
+            // All the Block Text underneath will be processed here, so it will be set to null.
+            a.block = null;
         } else if (a.type === "Code" && !a.buffer) {
             s += `e = document.createElement('script');`;
             s += `e.textContent = "${a.val}";`;
