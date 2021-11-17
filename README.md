@@ -46,6 +46,7 @@ mixin sample-element(align)
 All you have to do is register it as a custom element and write it in your HTML.
 
 ```javascript
+// The class name is exported with the mixin converted to Pascal case.
 import SampleElement from './sample-element.ce.pug';
 
 // ex. <sample-element align="center">Sample Text</sample-element>
@@ -58,7 +59,7 @@ I lack verification on everything, so if you find a bug, please report it to me 
 |Pug Docks|Support|
 |---|---|
 |[Attributes](https://pugjs.org/language/attributes.html)|Support *1|
-|[Case](https://pugjs.org/language/case.html)|To be supported|
+|[Case](https://pugjs.org/language/case.html)|Support|
 |[Code](https://pugjs.org/language/code.html)|To be supported|
 |[Comments](https://pugjs.org/language/comments.html)|Support|
 |[Conditionals](https://pugjs.org/language/conditionals.html)|Support|

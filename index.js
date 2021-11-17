@@ -60,6 +60,22 @@ const createClass = (ast) => {
             s += `parent.appendChild(e);`;
             // All the Block Text underneath will be processed here, so it will be set to null.
             a.block = null;
+        } else if (a.type === "Case") {
+            s += `switch(${a.expr}) {`;
+            s += a.block.nodes.map(node => {
+                let t = `${node.expr === "default" ?
+                    "" :
+                    "case"} ${node.expr}:`;
+                if (node.block.nodes.length === 1) {
+                    t += node.block.nodes[0].val;
+                } else if (node.block && node.block.nodes.length) {
+                    t += build('parent', node.block) + "break;";
+                }
+                t += `\n`;
+                return t;
+            }).join('');
+            s += `}`;
+            a.block = null;
         } else if (a.type === "Code" && !a.buffer) {
             s += `e = document.createElement('script');`;
             s += `e.textContent = "${a.val}";`;
